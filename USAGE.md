@@ -15,7 +15,7 @@ Responses are controlled by the `X-Mock-Scenario` header. Supported values:
 ```
 curl -H 'Content-Type: application/json' \
   -d '{"query":"query search{search{start total}}","operationName":"search"}' \
-  http://localhost:3002/api/graphql
+  http://localhost:8082/api/graphql
 ```
 
 ### Entity Lookup with Scenario
@@ -23,7 +23,7 @@ curl -H 'Content-Type: application/json' \
 curl -H 'Content-Type: application/json' \
   -H 'X-Mock-Scenario: error' \
   -d '{"query":"query entityByUrn($urn:String!){entityByUrn(urn:$urn){urn}}","variables":{"urn":"urn:li:dataset:1"},"operationName":"entityByUrn"}' \
-  http://localhost:3002/api/graphql
+  http://localhost:8082/api/graphql
 ```
 
 ## REST
@@ -38,13 +38,13 @@ Supported REST endpoints:
 - `DELETE /api/datasets/{urn}/ownership/{ownerUrn}`
 ### Search
 ```
-curl http://localhost:3002/api/search?query=sample
+curl http://localhost:8083/api/search?query=sample
 ```
 
 ### Auth Scenario
 ```
-curl -i -H 'X-Mock-Scenario: auth' http://localhost:3002/api/search
+curl -i -H 'X-Mock-Scenario: auth' http://localhost:8083/api/search
 ```
 
 ## Frontend
-A small HTML frontend is served at `http://localhost:8082/`.
+A small HTML frontend is served at `http://localhost:3002/` with sections for GraphQL and REST testing.

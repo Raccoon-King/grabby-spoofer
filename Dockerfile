@@ -13,7 +13,8 @@ WORKDIR /app
 COPY --from=build /src/mockhub ./mockhub
 COPY --from=build /src/examples/frontend ./examples/frontend
 COPY --from=build /src/internal/rest/openapi.yaml ./internal/rest/openapi.yaml
-EXPOSE 3002 8082
-ENV API_PORT=3002
-ENV UI_PORT=8082
+EXPOSE 3002 8082 8083
+ENV GRAPHQL_PORT=8082
+ENV REST_PORT=8083
+ENV UI_PORT=3002
 ENTRYPOINT ["/app/mockhub"]

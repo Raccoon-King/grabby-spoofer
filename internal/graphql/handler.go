@@ -88,7 +88,7 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 
 // GraphiQL serves a tiny GraphiQL page.
 func GraphiQL(w http.ResponseWriter, r *http.Request) {
-	endpoint := fmt.Sprintf("http://localhost:%s/api/graphql", httputil.GetEnv("API_PORT", "3002"))
+	endpoint := fmt.Sprintf("http://localhost:%s/api/graphql", httputil.GetEnv("GRAPHQL_PORT", "8082"))
 	html := fmt.Sprintf(`<!DOCTYPE html><html><head><title>GraphiQL</title>
     <link href="https://unpkg.com/graphiql/graphiql.min.css" rel="stylesheet" />
     </head><body style=\"margin:0;\">

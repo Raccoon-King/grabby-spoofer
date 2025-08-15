@@ -8,9 +8,31 @@
 <body>
   <h1>MockHub Tester</h1>
   <section>
-    <h2>API Endpoints</h2>
+    <h2>GraphQL</h2>
+    <p>Endpoint: <code>POST http://localhost:8082/api/graphql</code></p>
+    <div>
+      <label>Scenario:
+        <select id="gql-scenario">
+          <option>default</option>
+          <option>empty</option>
+          <option>partial</option>
+          <option>error</option>
+          <option>auth</option>
+        </select>
+      </label>
+    </div>
+    <div>
+      <label>Body:</label><br />
+      <textarea id="gql-body" rows="8" cols="60">{"query":"{__typename}","operationName":""}</textarea>
+    </div>
+    <button id="gql-send">Send</button>
+    <pre id="gql-result"></pre>
+  </section>
+
+  <section>
+    <h2>REST</h2>
+    <p>Base URL: <code>http://localhost:8083</code></p>
     <ul>
-      <li>POST /api/graphql</li>
       <li>GET /api/search?query=&amp;start=0&amp;count=20</li>
       <li>GET /api/entities/{urn}</li>
       <li>POST /api/tags</li>
@@ -20,47 +42,65 @@
       <li>POST /api/datasets/{urn}/ownership</li>
       <li>DELETE /api/datasets/{urn}/ownership/{ownerUrn}</li>
     </ul>
+    <div>
+      <label>Method:
+        <select id="rest-method">
+          <option>GET</option>
+          <option>POST</option>
+        </select>
+      </label>
+    </div>
+    <div>
+      <label>Path:
+        <input id="rest-path" value="/api/search" size="40" />
+      </label>
+    </div>
+    <div>
+      <label>Scenario:
+        <select id="rest-scenario">
+          <option>default</option>
+          <option>empty</option>
+          <option>partial</option>
+          <option>error</option>
+          <option>auth</option>
+        </select>
+      </label>
+    </div>
+    <div>
+      <label>Body:</label><br />
+      <textarea id="rest-body" rows="8" cols="60"></textarea>
+    </div>
+    <button id="rest-send">Send</button>
+    <pre id="rest-result"></pre>
   </section>
-  <div>
-    <label>Method:
-      <select id="method">
-        <option>GET</option>
-        <option>POST</option>
-      </select>
-    </label>
-  </div>
-  <div>
-    <label>Path:
-      <input id="path" value="/api/search" size="40" />
-    </label>
-  </div>
-  <div>
-    <label>Scenario:
-      <select id="scenario">
-        <option>default</option>
-        <option>empty</option>
-        <option>partial</option>
-        <option>error</option>
-        <option>auth</option>
-      </select>
-    </label>
-  </div>
-  <div>
-    <label>Body:</label><br />
-    <textarea id="body" rows="8" cols="60"></textarea>
-  </div>
-  <button id="send">Send</button>
-  <pre id="result"></pre>
+
   <h2>Logs</h2>
   <pre id="logs"></pre>
   <script>
-    document.getElementById('send').addEventListener('click', async () => {
-      const method = document.getElementById('method').value;
-      const path = document.getElementById('path').value;
-      const base = 'http://localhost:3002';
+    document.getElementById('gql-send').addEventListener('click', async () => {
+      const scenario = document.getElementById('gql-scenario').value;
+      const body = document.getElementById('gql-body').value;
+      const options = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'X-Mock-Scenario': scenario },
+        body,
+      };
+      try {
+        const res = await fetch('http://localhost:8082/api/graphql', options);
+        const text = await res.text();
+        document.getElementById('gql-result').textContent = text;
+      } catch (err) {
+        document.getElementById('gql-result').textContent = err;
+      }
+    });
+
+    document.getElementById('rest-send').addEventListener('click', async () => {
+      const method = document.getElementById('rest-method').value;
+      const path = document.getElementById('rest-path').value;
+      const base = 'http://localhost:8083';
       const url = path.startsWith('http') ? path : base + path;
-      const scenario = document.getElementById('scenario').value;
-      const body = document.getElementById('body').value;
+      const scenario = document.getElementById('rest-scenario').value;
+      const body = document.getElementById('rest-body').value;
       const options = { method, headers: { 'X-Mock-Scenario': scenario } };
       if (method === 'POST') {
         options.headers['Content-Type'] = 'application/json';
@@ -69,9 +109,9 @@
       try {
         const res = await fetch(url, options);
         const text = await res.text();
-        document.getElementById('result').textContent = text;
+        document.getElementById('rest-result').textContent = text;
       } catch (err) {
-        document.getElementById('result').textContent = err;
+        document.getElementById('rest-result').textContent = err;
       }
     });
 

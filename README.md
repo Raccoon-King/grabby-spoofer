@@ -9,7 +9,7 @@ cp .env.example .env
 make run
 ```
 
-API server listens on `:3002` and the UI on `:8082` by default.
+GraphQL endpoints listen on `:8082`, REST endpoints on `:8083`, and the docs/UI on `:3002` by default.
 
 ### Docker
 
@@ -18,14 +18,14 @@ make docker-build
 make docker-run
 ```
 
-Environment variables can be passed with `-e`, for example `docker run -e API_PORT=3002 -e UI_PORT=8082 -p 3002:3002 -p 8082:8082 mockhub`.
+Environment variables can be passed with `-e`, for example `docker run -e GRAPHQL_PORT=8082 -e REST_PORT=8083 -e UI_PORT=3002 -p 8082:8082 -p 8083:8083 -p 3002:3002 mockhub`.
 
-- GraphQL endpoint: `POST http://localhost:3002/api/graphql`
-- GraphiQL UI: `http://localhost:8082/graphiql`
-- REST endpoints: `http://localhost:3002/api/...`
-- Swagger UI: `http://localhost:8082/swagger`
-- Example frontend: `http://localhost:8082/`
-- Server logs: `http://localhost:8082/logs` (also shown in the frontend)
+- GraphQL endpoint: `POST http://localhost:8082/api/graphql`
+- GraphiQL UI: `http://localhost:3002/graphiql`
+- REST endpoints: `http://localhost:8083/api/...`
+- Swagger UI: `http://localhost:3002/swagger`
+- Example frontend: `http://localhost:3002/`
+- Server logs: `http://localhost:3002/logs` (also shown in the frontend)
 
 Detailed usage instructions are available in [USAGE.md](USAGE.md).
 
