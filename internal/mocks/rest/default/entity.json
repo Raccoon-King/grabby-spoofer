@@ -1,0 +1,1 @@
+{"urn":"urn:li:dataset:(urn:li:dataPlatform:hive,SampleDataset,PROD)","type":"DATASET","name":"Sample Dataset","description":"Sample dataset","platform":"hive","tags":["pii","gold"],"ownership":[{"ownerUrn":"urn:li:corpuser:jsmith","type":"DATAOWNER"}]}

@@ -1,0 +1,1 @@
+{"data":{"searchAcrossEntities":{"start":0,"count":1,"total":1,"searchResults":[{"entity":{"urn":"urn:li:dataset:(urn:li:dataPlatform:hive,SampleDataset,PROD)","type":"DATASET","name":"Sample Dataset","description":"Sample dataset","platform":"hive","tags":["pii","gold"]}}]}}}
