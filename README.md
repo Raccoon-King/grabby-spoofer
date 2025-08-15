@@ -25,6 +25,7 @@ Environment variables can be passed with `-e`, for example `docker run -e API_PO
 - REST endpoints: `http://localhost:3002/api/...`
 - Swagger UI: `http://localhost:8082/swagger`
 - Example frontend: `http://localhost:8082/`
+- Server logs: `http://localhost:8082/logs` (also shown in the frontend)
 
 Detailed usage instructions are available in [USAGE.md](USAGE.md).
 

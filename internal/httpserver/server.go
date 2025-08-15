@@ -2,6 +2,7 @@
 package httpserver
 
 import (
+	"io"
 	"net/http"
 	"os"
 	"time"
@@ -19,7 +20,7 @@ import (
 // NewAPIServer configures the backend API server.
 func NewAPIServer() *http.Server {
 	port := httputil.GetEnv("API_PORT", "3002")
-	logLevel := httputil.GetEnv("LOG_LEVEL", "info")
+	logLevel := httputil.GetEnv("LOG_LEVEL", "debug")
 	allowed := httputil.GetEnv("CORS_ALLOWED_ORIGINS", "*")
 
 	lvl, err := zerolog.ParseLevel(logLevel)
@@ -27,7 +28,8 @@ func NewAPIServer() *http.Server {
 		lvl = zerolog.InfoLevel
 	}
 	zerolog.SetGlobalLevel(lvl)
-	logger := log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
+	cw := zerolog.ConsoleWriter{Out: io.MultiWriter(os.Stderr, httputil.GlobalLogBuffer)}
+	logger := log.Output(cw)
 
 	r := chi.NewRouter()
 	r.Use(cors.Handler(cors.Options{
@@ -59,14 +61,15 @@ func NewAPIServer() *http.Server {
 // NewUIServer configures the frontend/docs server.
 func NewUIServer() *http.Server {
 	port := httputil.GetEnv("UI_PORT", "8082")
-	logLevel := httputil.GetEnv("LOG_LEVEL", "info")
+	logLevel := httputil.GetEnv("LOG_LEVEL", "debug")
 
 	lvl, err := zerolog.ParseLevel(logLevel)
 	if err != nil {
 		lvl = zerolog.InfoLevel
 	}
 	zerolog.SetGlobalLevel(lvl)
-	logger := log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
+	cw := zerolog.ConsoleWriter{Out: io.MultiWriter(os.Stderr, httputil.GlobalLogBuffer)}
+	logger := log.Output(cw)
 
 	r := chi.NewRouter()
 	r.Use(httputil.RequestLogger(logger))
@@ -74,6 +77,7 @@ func NewUIServer() *http.Server {
 
 	r.Get("/healthz", func(w http.ResponseWriter, r *http.Request) { w.WriteHeader(http.StatusOK) })
 	r.Get("/readyz", func(w http.ResponseWriter, r *http.Request) { w.WriteHeader(http.StatusOK) })
+	r.Get("/logs", httputil.LogsHandler)
 
 	r.Get("/graphiql", graphql.GraphiQL)
 	r.Get("/swagger", rest.SwaggerUI)

@@ -27,6 +27,15 @@ curl -H 'Content-Type: application/json' \
 ```
 
 ## REST
+Supported REST endpoints:
+- `GET /api/search?query=&start=0&count=20`
+- `GET /api/entities/{urn}`
+- `POST /api/tags`
+- `POST /api/entities/{urn}/tags`
+- `DELETE /api/entities/{urn}/tags/{tagName}`
+- `GET /api/datasets/{urn}/ownership`
+- `POST /api/datasets/{urn}/ownership`
+- `DELETE /api/datasets/{urn}/ownership/{ownerUrn}`
 ### Search
 ```
 curl http://localhost:3002/api/search?query=sample

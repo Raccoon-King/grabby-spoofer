@@ -7,6 +7,20 @@
 </head>
 <body>
   <h1>MockHub Tester</h1>
+  <section>
+    <h2>API Endpoints</h2>
+    <ul>
+      <li>POST /api/graphql</li>
+      <li>GET /api/search?query=&amp;start=0&amp;count=20</li>
+      <li>GET /api/entities/{urn}</li>
+      <li>POST /api/tags</li>
+      <li>POST /api/entities/{urn}/tags</li>
+      <li>DELETE /api/entities/{urn}/tags/{tagName}</li>
+      <li>GET /api/datasets/{urn}/ownership</li>
+      <li>POST /api/datasets/{urn}/ownership</li>
+      <li>DELETE /api/datasets/{urn}/ownership/{ownerUrn}</li>
+    </ul>
+  </section>
   <div>
     <label>Method:
       <select id="method">
@@ -37,6 +51,8 @@
   </div>
   <button id="send">Send</button>
   <pre id="result"></pre>
+  <h2>Logs</h2>
+  <pre id="logs"></pre>
   <script>
     document.getElementById('send').addEventListener('click', async () => {
       const method = document.getElementById('method').value;
@@ -58,6 +74,18 @@
         document.getElementById('result').textContent = err;
       }
     });
+
+    async function refreshLogs() {
+      try {
+        const res = await fetch('/logs');
+        const text = await res.text();
+        document.getElementById('logs').textContent = text;
+      } catch (err) {
+        document.getElementById('logs').textContent = err;
+      }
+    }
+    refreshLogs();
+    setInterval(refreshLogs, 2000);
   </script>
 </body>
 </html>
