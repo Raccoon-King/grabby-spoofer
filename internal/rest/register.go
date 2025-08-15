@@ -9,7 +9,7 @@ import (
 
 	"github.com/go-chi/chi/v5"
 
-	"github.com/example/mockhub/pkg/httputil"
+	"github.com/example/grabby-api/pkg/httputil"
 )
 
 var restMocks = map[string]map[string]map[string]interface{}{}

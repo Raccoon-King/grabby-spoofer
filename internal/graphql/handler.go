@@ -9,7 +9,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/example/mockhub/pkg/httputil"
+	"github.com/example/grabby-api/pkg/httputil"
 )
 
 // request represents incoming GraphQL request.

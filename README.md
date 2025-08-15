@@ -1,6 +1,6 @@
-# MockHub
+# Grabby API
 
-MockHub is a local mock server for DataHub APIs. It serves canned responses for GraphQL and REST endpoints and allows toggling scenarios via request headers.
+Grabby API is a local mock server for DataHub APIs. It serves canned responses for GraphQL and REST endpoints and allows toggling scenarios via request headers.
 
 ## Running
 
@@ -18,7 +18,7 @@ make docker-build
 make docker-run
 ```
 
-Environment variables can be passed with `-e`, for example `docker run -e API_PORT=3002 -e UI_PORT=8082 -p 3002:3002 -p 8082:8082 mockhub`.
+Environment variables can be passed with `-e`, for example `docker run -e API_PORT=3002 -e UI_PORT=8082 -p 3002:3002 -p 8082:8082 grabby-api`.
 
 - GraphQL endpoint: `POST http://localhost:3002/api/graphql`
 - GraphiQL UI: `http://localhost:8082/graphiql`

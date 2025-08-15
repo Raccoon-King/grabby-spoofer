@@ -1,4 +1,4 @@
-module github.com/example/mockhub
+module github.com/example/grabby-api
 
 go 1.21
 
