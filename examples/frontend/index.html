@@ -1,0 +1,61 @@
+<!-- Copyright (c) 2024. Licensed under the MIT License. -->
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>MockHub Frontend</title>
+</head>
+<body>
+  <h1>MockHub Tester</h1>
+  <div>
+    <label>Method:
+      <select id="method">
+        <option>GET</option>
+        <option>POST</option>
+      </select>
+    </label>
+  </div>
+  <div>
+    <label>Path:
+      <input id="path" value="/api/search" size="40" />
+    </label>
+  </div>
+  <div>
+    <label>Scenario:
+      <select id="scenario">
+        <option>default</option>
+        <option>empty</option>
+        <option>partial</option>
+        <option>error</option>
+        <option>auth</option>
+      </select>
+    </label>
+  </div>
+  <div>
+    <label>Body:</label><br />
+    <textarea id="body" rows="8" cols="60"></textarea>
+  </div>
+  <button id="send">Send</button>
+  <pre id="result"></pre>
+  <script>
+    document.getElementById('send').addEventListener('click', async () => {
+      const method = document.getElementById('method').value;
+      const path = document.getElementById('path').value;
+      const scenario = document.getElementById('scenario').value;
+      const body = document.getElementById('body').value;
+      const options = { method, headers: { 'X-Mock-Scenario': scenario } };
+      if (method === 'POST') {
+        options.headers['Content-Type'] = 'application/json';
+        options.body = body;
+      }
+      try {
+        const res = await fetch(path, options);
+        const text = await res.text();
+        document.getElementById('result').textContent = text;
+      } catch (err) {
+        document.getElementById('result').textContent = err;
+      }
+    });
+  </script>
+</body>
+</html>

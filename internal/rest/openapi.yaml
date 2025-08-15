@@ -1,0 +1,31 @@
+openapi: 3.0.0
+info:
+  title: MockHub REST API
+  version: 1.0.0
+paths:
+  /api/search:
+    get:
+      parameters:
+        - in: query
+          name: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Search results
+  /api/entities/{urn}:
+    get:
+      parameters:
+        - in: path
+          name: urn
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Entity
+  /api/tags:
+    post:
+      responses:
+        '200':
+          description: Tag created

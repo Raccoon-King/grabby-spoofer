@@ -1,0 +1,6 @@
+# Copyright (c) 2024. Licensed under the MIT License.
+.git
+examples
+README.md
+USAGE.md
+Makefile
