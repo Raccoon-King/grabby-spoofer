@@ -3,6 +3,7 @@ package graphql
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"path/filepath"
@@ -87,15 +88,16 @@ func Handler(w http.ResponseWriter, r *http.Request) {
 
 // GraphiQL serves a tiny GraphiQL page.
 func GraphiQL(w http.ResponseWriter, r *http.Request) {
-	html := `<!DOCTYPE html><html><head><title>GraphiQL</title>
+	endpoint := fmt.Sprintf("http://localhost:%s/api/graphql", httputil.GetEnv("API_PORT", "3002"))
+	html := fmt.Sprintf(`<!DOCTYPE html><html><head><title>GraphiQL</title>
     <link href="https://unpkg.com/graphiql/graphiql.min.css" rel="stylesheet" />
-    </head><body style="margin:0;">
-    <div id="graphiql" style="height:100vh;"></div>
-    <script crossorigin src="https://unpkg.com/react/umd/react.production.min.js"></script>
-    <script crossorigin src="https://unpkg.com/react-dom/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/graphiql/graphiql.min.js"></script>
-    <script>const graphQLFetcher = graphQLParams => fetch('/api/graphql',{method:'post',headers:{'Content-Type':'application/json'},body:JSON.stringify(graphQLParams)}).then(r=>r.json());ReactDOM.render(React.createElement(GraphiQL,{fetcher:graphQLFetcher}),document.getElementById('graphiql'));</script>
-    </body></html>`
+    </head><body style=\"margin:0;\">
+    <div id=\"graphiql\" style=\"height:100vh;\"></div>
+    <script crossorigin src=\"https://unpkg.com/react/umd/react.production.min.js\"></script>
+    <script crossorigin src=\"https://unpkg.com/react-dom/umd/react-dom.production.min.js\"></script>
+    <script src=\"https://unpkg.com/graphiql/graphiql.min.js\"></script>
+    <script>const graphQLFetcher = graphQLParams => fetch('%s',{method:'post',headers:{'Content-Type':'application/json'},body:JSON.stringify(graphQLParams)}).then(r=>r.json());ReactDOM.render(React.createElement(GraphiQL,{fetcher:graphQLFetcher}),document.getElementById('graphiql'));</script>
+    </body></html>`, endpoint)
 	w.Header().Set("Content-Type", "text/html")
 	w.WriteHeader(http.StatusOK)
 	_, _ = w.Write([]byte(html))

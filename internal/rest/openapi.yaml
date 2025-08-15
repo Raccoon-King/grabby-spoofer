@@ -1,7 +1,10 @@
+# Copyright (c) 2024. Licensed under the MIT License.
 openapi: 3.0.0
 info:
   title: MockHub REST API
   version: 1.0.0
+servers:
+  - url: http://localhost:3002
 paths:
   /api/search:
     get:

@@ -16,10 +16,9 @@ import (
 	"github.com/example/mockhub/pkg/httputil"
 )
 
-// New creates a configured http.Server.
-func New() *http.Server {
-	// Configuration via env vars
-	port := httputil.GetEnv("PORT", "8080")
+// NewAPIServer configures the backend API server.
+func NewAPIServer() *http.Server {
+	port := httputil.GetEnv("API_PORT", "3002")
 	logLevel := httputil.GetEnv("LOG_LEVEL", "info")
 	allowed := httputil.GetEnv("CORS_ALLOWED_ORIGINS", "*")
 
@@ -43,31 +42,59 @@ func New() *http.Server {
 	r.Get("/healthz", func(w http.ResponseWriter, r *http.Request) { w.WriteHeader(http.StatusOK) })
 	r.Get("/readyz", func(w http.ResponseWriter, r *http.Request) { w.WriteHeader(http.StatusOK) })
 
-	// GraphQL
 	r.Route("/api", func(api chi.Router) {
 		api.Post("/graphql", graphql.Handler)
-		api.Get("/graphql", graphql.Handler) // for graphiql / health
-		// REST subset
+		api.Get("/graphql", graphql.Handler)
 		rest.Register(api)
 	})
 
-	// GraphiQL UI
-	r.Get("/graphiql", graphql.GraphiQL)
-	// Swagger UI
-	r.Get("/swagger", rest.SwaggerUI)
-	r.Get("/openapi.yaml", rest.OpenAPI)
-
-	server := &http.Server{
+	return &http.Server{
 		Addr:         ":" + port,
 		Handler:      r,
 		ReadTimeout:  15 * time.Second,
 		WriteTimeout: 15 * time.Second,
 	}
-	return server
 }
 
-// Run starts the server and blocks.
+// NewUIServer configures the frontend/docs server.
+func NewUIServer() *http.Server {
+	port := httputil.GetEnv("UI_PORT", "8082")
+	logLevel := httputil.GetEnv("LOG_LEVEL", "info")
+
+	lvl, err := zerolog.ParseLevel(logLevel)
+	if err != nil {
+		lvl = zerolog.InfoLevel
+	}
+	zerolog.SetGlobalLevel(lvl)
+	logger := log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
+
+	r := chi.NewRouter()
+	r.Use(httputil.RequestLogger(logger))
+	r.Use(httputil.Recoverer(logger))
+
+	r.Get("/healthz", func(w http.ResponseWriter, r *http.Request) { w.WriteHeader(http.StatusOK) })
+	r.Get("/readyz", func(w http.ResponseWriter, r *http.Request) { w.WriteHeader(http.StatusOK) })
+
+	r.Get("/graphiql", graphql.GraphiQL)
+	r.Get("/swagger", rest.SwaggerUI)
+	r.Get("/openapi.yaml", rest.OpenAPI)
+	r.Handle("/*", http.FileServer(http.Dir("examples/frontend")))
+
+	return &http.Server{
+		Addr:         ":" + port,
+		Handler:      r,
+		ReadTimeout:  15 * time.Second,
+		WriteTimeout: 15 * time.Second,
+	}
+}
+
+// Run starts both servers and blocks until one exits.
 func Run() error {
-	server := New()
-	return server.ListenAndServe()
+	api := NewAPIServer()
+	ui := NewUIServer()
+
+	errCh := make(chan error, 2)
+	go func() { errCh <- api.ListenAndServe() }()
+	go func() { errCh <- ui.ListenAndServe() }()
+	return <-errCh
 }

@@ -11,6 +11,9 @@ RUN CGO_ENABLED=0 GOOS=linux go build -o mockhub ./cmd/mockhub
 FROM alpine:3.19
 WORKDIR /app
 COPY --from=build /src/mockhub ./mockhub
-EXPOSE 8080
-ENV PORT=8080
+COPY --from=build /src/examples/frontend ./examples/frontend
+COPY --from=build /src/internal/rest/openapi.yaml ./internal/rest/openapi.yaml
+EXPOSE 3002 8082
+ENV API_PORT=3002
+ENV UI_PORT=8082
 ENTRYPOINT ["/app/mockhub"]
