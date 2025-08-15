@@ -4,9 +4,9 @@ package main
 import (
 	"log"
 
-	"github.com/example/mockhub/internal/graphql"
-	"github.com/example/mockhub/internal/httpserver"
-	"github.com/example/mockhub/internal/rest"
+	"github.com/example/grabby-api/internal/graphql"
+	"github.com/example/grabby-api/internal/httpserver"
+	"github.com/example/grabby-api/internal/rest"
 )
 
 func main() {

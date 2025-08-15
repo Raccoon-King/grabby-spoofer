@@ -1,6 +1,6 @@
 # Usage Guide
 
-This guide shows how to interact with MockHub's mocked DataHub APIs.
+This guide shows how to interact with Grabby API's mocked DataHub APIs.
 
 ## Prerequisites
 * Go 1.21+

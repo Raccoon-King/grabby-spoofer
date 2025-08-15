@@ -12,6 +12,10 @@ import (
 func RequestLogger(logger zerolog.Logger) func(next http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			if r.URL.Path == "/healthz" || r.URL.Path == "/readyz" {
+				next.ServeHTTP(w, r)
+				return
+			}
 			start := time.Now()
 			scenario := ScenarioFromHeader(r)
 			ww := &responseWriter{ResponseWriter: w, status: 200}

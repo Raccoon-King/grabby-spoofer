@@ -11,9 +11,9 @@ import (
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 
-	"github.com/example/mockhub/internal/graphql"
-	"github.com/example/mockhub/internal/rest"
-	"github.com/example/mockhub/pkg/httputil"
+	"github.com/example/grabby-api/internal/graphql"
+	"github.com/example/grabby-api/internal/rest"
+	"github.com/example/grabby-api/pkg/httputil"
 )
 
 // NewAPIServer configures the backend API server.
@@ -69,7 +69,6 @@ func NewUIServer() *http.Server {
 	logger := log.Output(zerolog.ConsoleWriter{Out: os.Stderr})
 
 	r := chi.NewRouter()
-	r.Use(httputil.RequestLogger(logger))
 	r.Use(httputil.Recoverer(logger))
 
 	r.Get("/healthz", func(w http.ResponseWriter, r *http.Request) { w.WriteHeader(http.StatusOK) })
